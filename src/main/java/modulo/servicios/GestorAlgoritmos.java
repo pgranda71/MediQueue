@@ -1,4 +1,4 @@
-package modulo.estructuras;
+package modulo.servicios;
 
 import modulo.modelo.NodoPaciente;
 import modulo.modelo.Paciente;

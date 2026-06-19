@@ -7,8 +7,8 @@ package modulo.vista;
 import java.util.Scanner;
 import modulo.estructuras.ColaPrioridadHospital;
 import modulo.modelo.Paciente;
-import modulo.estructuras.GestorAlgoritmos;
-import modulo.estructuras.ListaHistorialAtendidos;
+import modulo.servicios.GestorAlgoritmos;
+import modulo.servicios.ListaHistorialAtendidos;
 
 /**
  *
