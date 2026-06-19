@@ -7,6 +7,8 @@ package modulo.vista;
 import java.util.Scanner;
 import modulo.estructuras.ColaPrioridadHospital;
 import modulo.modelo.Paciente;
+import modulo.estructuras.GestorAlgoritmos;
+import modulo.estructuras.ListaHistorialAtendidos;
 
 /**
  *
@@ -14,11 +16,15 @@ import modulo.modelo.Paciente;
  */
 public class VistaConsola {
 private ColaPrioridadHospital colaEspera;
+    private ListaHistorialAtendidos historial;
+    private GestorAlgoritmos gestorAlgoritmos;
     private Scanner teclado;
 
     public VistaConsola() {
         this.colaEspera = new ColaPrioridadHospital();
         this.teclado = new Scanner(System.in);
+        this.historial = new ListaHistorialAtendidos();
+        this.gestorAlgoritmos = new GestorAlgoritmos();
     }
 
     public void iniciarSistema() {
@@ -26,7 +32,7 @@ private ColaPrioridadHospital colaEspera;
         do {
             mostrarMenu();
             opcion = teclado.nextInt();
-            teclado.nextLine(); 
+            teclado.nextLine();
 
             switch (opcion) {
                 case 1:
@@ -39,12 +45,18 @@ private ColaPrioridadHospital colaEspera;
                     procesarMonitor();
                     break;
                 case 4:
+                    procesarBusqueda();
+                    break;
+                case 5:
+                    procesarReporte();
+                    break;
+                case 6:
                     System.out.println("Cerrando sesion de seguridad en MediQueue...");
                     break;
                 default:
                     System.out.println("Error: Opcion invalida.");
             }
-        } while (opcion != 4);
+        } while (opcion != 6);
     }
 
     private void mostrarMenu() {
@@ -54,8 +66,10 @@ private ColaPrioridadHospital colaEspera;
         System.out.println("[1] Nuevo Ingreso (Registrar Paciente)");
         System.out.println("[2] Llamar Paciente (Atencion Medica)");
         System.out.println("[3]  Ver Monitor de la Sala de Espera");
-        System.out.println("[4] Salir del Sistema");
-        System.out.print("Simule un clic presionando una opcion: ");
+        System.out.println("[4] Buscar Paciente en Historial");
+        System.out.println("[5] Ver Reporte de Atendidos");
+        System.out.println("[6] Salir del Sistema");
+        System.out.print("Seleccione una opcion: ");
     }
 
     private void procesarRegistro() {
@@ -80,6 +94,7 @@ private ColaPrioridadHospital colaEspera;
     private void procesarAtencion() {
         Paciente atendido = colaEspera.atender();
         if (atendido != null) {
+            historial.registrarAtencion(atendido);
             System.out.println("\n*** [PANTALLA EMERGENTE]: ATENDIENDO PACIENTE CRITICO ***");
             System.out.println("Paciente: " + atendido.getNombre() + " | Cedula: " + atendido.getCedula());
             System.out.println("Nivel de Gravedad Despachado: " + atendido.getNivelTriaje());
@@ -98,6 +113,39 @@ private ColaPrioridadHospital colaEspera;
         System.out.printf("%-12s | %-20s | %-10s\n", "CEDULA", "PACIENTE", "TRIAJE");
         System.out.println("--------------------------------------------------");
         for (Paciente p : listaParaTabla) {
+            System.out.printf("%-12s | %-20s | Nivel %d\n", p.getCedula(), p.getNombre(), p.getNivelTriaje());
+        }
+        System.out.println("--------------------------------------------------");
+    }
+
+    private void procesarBusqueda() {
+        System.out.println("\n--- BUSQUEDA BINARIA EN HISTORIAL ---");
+        if (historial.obtenerTotal() == 0) {
+            System.out.println("[INFO]: No hay pacientes en el historial todavia.");
+            return;
+        }
+        System.out.print("Ingrese la cedula a buscar: ");
+        String cedula = teclado.nextLine();
+
+        Paciente[] arreglo = historial.obtenerHistorialComoArreglo();
+        gestorAlgoritmos.ordenarHistorialRecursivo(arreglo, 0, arreglo.length - 1);
+        Paciente resultado = gestorAlgoritmos.buscarPacienteBinario(arreglo, cedula, 0, arreglo.length - 1);
+
+        if (resultado != null) {
+            System.out.println("[ENCONTRADO]: " + resultado.getNombre() + " | Triaje: " + resultado.getNivelTriaje());
+        } else {
+            System.out.println("[NO ENCONTRADO]: La cedula " + cedula + " no esta en el historial.");
+        }
+    }
+
+    private void procesarReporte() {
+        System.out.println("\n--- REPORTE DE PACIENTES ATENDIDOS ---");
+        System.out.println("Total atendidos: " + historial.obtenerTotal());
+        Paciente[] atendidos = historial.obtenerHistorialComoArreglo();
+        System.out.println("--------------------------------------------------");
+        System.out.printf("%-12s | %-20s | %-10s\n", "CEDULA", "PACIENTE", "TRIAJE");
+        System.out.println("--------------------------------------------------");
+        for (Paciente p : atendidos) {
             System.out.printf("%-12s | %-20s | Nivel %d\n", p.getCedula(), p.getNombre(), p.getNivelTriaje());
         }
         System.out.println("--------------------------------------------------");
