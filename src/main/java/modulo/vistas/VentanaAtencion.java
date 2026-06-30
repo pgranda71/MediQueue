@@ -4,19 +4,35 @@
  */
 package modulo.vistas;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modulo.estructuras.ColaPrioridadHospital;
+import modulo.modelo.Paciente;
+import modulo.servicios.ListaHistorialAtendidos;
+
 /**
  *
  * @author paula
  */
 public class VentanaAtencion extends javax.swing.JFrame {
+    private ColaPrioridadHospital colaTriaje;
+    private ListaHistorialAtendidos historialAtendidos;
+    private VentanaMenuHospital menuPrincipal;
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaAtencion.class.getName());
 
     /**
      * Creates new form VentanaAtencion
+     * @param menuShared
+     * @param colaShared
+     * @param historialShared
      */
-    public VentanaAtencion() {
+    public VentanaAtencion(VentanaMenuHospital menuShared, modulo.estructuras.ColaPrioridadHospital colaShared, modulo.servicios.ListaHistorialAtendidos historialShared) {
         initComponents();
+        this.menuPrincipal = menuShared;
+        this.colaTriaje = colaShared;
+        this.historialAtendidos = historialShared;
+       
+        actualizarTablaEspera();
     }
 
     /**
@@ -28,47 +44,139 @@ public class VentanaAtencion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblPacientesEspera = new javax.swing.JTable();
+        btnLlamarPaciente = new javax.swing.JButton();
+        btnVolverMenu = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setOpaque(false);
+
+        tblPacientesEspera.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Nombres Completos", "Cédula", "Prioridad"
+            }
+        ));
+        jScrollPane1.setViewportView(tblPacientesEspera);
+
+        btnLlamarPaciente.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); // NOI18N
+        btnLlamarPaciente.setText("Atender Paciente");
+        btnLlamarPaciente.setActionCommand("Atender Paciente");
+        btnLlamarPaciente.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 102)));
+        btnLlamarPaciente.addActionListener(this::btnLlamarPacienteActionPerformed);
+
+        btnVolverMenu.setText("Regresar al menú principal ");
+        btnVolverMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 102)));
+        btnVolverMenu.addActionListener(this::btnVolverMenuActionPerformed);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(btnLlamarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(112, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(93, 93, 93)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnLlamarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 850, 390));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/fondo_AtencionPaciente.png"))); // NOI18N
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 900, 470));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnLlamarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLlamarPacienteActionPerformed
+        // TODO add your handling code here:
+        
+        Paciente pacienteLlamado = colaTriaje.atender();
+
+        if (pacienteLlamado == null) {
+            JOptionPane.showMessageDialog(this, 
+                    "No hay más pacientes en la cola de espera de triaje.", 
+                    "Cola Vacía", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Lo registramos en tu lista enlazada del historial de atendidos
+        historialAtendidos.registrarAtencion(pacienteLlamado);
+
+        // Notificación flotante de llamado
+        JOptionPane.showMessageDialog(this, 
+                "PRÓXIMO PACIENTE A CONSULTORIO:\n\n" +
+                "Nombre: " + pacienteLlamado.getNombre() + "\n" +
+                "Identificación: " + pacienteLlamado.getCedula() + "\n" +
+                "Gravedad: Nivel " + pacienteLlamado.getNivelTriaje(), 
+                "Llamado de Paciente", 
+                JOptionPane.INFORMATION_MESSAGE);
+
+        // Refrescamos la tabla inmediatamente para mostrar que ya no está en espera
+        actualizarTablaEspera();
+    }//GEN-LAST:event_btnLlamarPacienteActionPerformed
+
+    private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
+        // TODO add your handling code here:
+        this.menuPrincipal.setVisible(true); // Hace reaparecer las 4 tarjetas
+        this.dispose();
+    }//GEN-LAST:event_btnVolverMenuActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+ private void actualizarTablaEspera() {
+        DefaultTableModel modeloTabla = (DefaultTableModel) tblPacientesEspera.getModel();
+        modeloTabla.setRowCount(0); // Limpiamos las filas viejas
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new VentanaAtencion().setVisible(true));
+        // Usamos tu método del TDA que recorre los nodos y devuelve el arreglo ordenado
+        Paciente[] pacientesEnFila = colaTriaje.transformarAArreglo();
+
+        // Recorremos el arreglo y agregamos las filas visuales
+        for (Paciente p : pacientesEnFila) {
+            Object[] fila = new Object[]{
+                p.getNombre(),
+                p.getCedula(),
+                "Nivel " + p.getNivelTriaje()
+            };
+            modeloTabla.addRow(fila);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLlamarPaciente;
+    private javax.swing.JButton btnVolverMenu;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblPacientesEspera;
     // End of variables declaration//GEN-END:variables
 }

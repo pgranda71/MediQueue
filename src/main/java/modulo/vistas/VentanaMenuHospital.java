@@ -36,8 +36,10 @@ public class VentanaMenuHospital extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btnNuevoRegistro = new javax.swing.JButton();
-        btnIniciarAtencion = new javax.swing.JButton();
+        btnNuevoIngreso = new javax.swing.JButton();
+        btnLlamarPaciente = new javax.swing.JButton();
+        btnBusquedaCritica = new javax.swing.JButton();
+        btnReportesDia = new javax.swing.JButton();
         lblFondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -45,58 +47,91 @@ public class VentanaMenuHospital extends javax.swing.JFrame {
 
         jPanel1.setOpaque(false);
 
-        btnNuevoRegistro.setBorder(null);
-        btnNuevoRegistro.setBorderPainted(false);
-        btnNuevoRegistro.setContentAreaFilled(false);
-        btnNuevoRegistro.addActionListener(this::btnNuevoRegistroActionPerformed);
+        btnNuevoIngreso.setBorder(null);
+        btnNuevoIngreso.setBorderPainted(false);
+        btnNuevoIngreso.setContentAreaFilled(false);
+        btnNuevoIngreso.addActionListener(this::btnNuevoIngresoActionPerformed);
 
-        btnIniciarAtencion.setBorder(null);
-        btnIniciarAtencion.setBorderPainted(false);
-        btnIniciarAtencion.setContentAreaFilled(false);
-        btnIniciarAtencion.addActionListener(this::btnIniciarAtencionActionPerformed);
+        btnLlamarPaciente.setBorder(null);
+        btnLlamarPaciente.setBorderPainted(false);
+        btnLlamarPaciente.setContentAreaFilled(false);
+        btnLlamarPaciente.addActionListener(this::btnLlamarPacienteActionPerformed);
+
+        btnBusquedaCritica.setBorder(null);
+        btnBusquedaCritica.setBorderPainted(false);
+        btnBusquedaCritica.setContentAreaFilled(false);
+        btnBusquedaCritica.addActionListener(this::btnBusquedaCriticaActionPerformed);
+
+        btnReportesDia.setBorder(null);
+        btnReportesDia.setBorderPainted(false);
+        btnReportesDia.setContentAreaFilled(false);
+        btnReportesDia.addActionListener(this::btnReportesDiaActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(btnNuevoRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63)
-                .addComponent(btnIniciarAtencion, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(btnNuevoIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnLlamarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addComponent(btnBusquedaCritica, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addComponent(btnReportesDia, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(253, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnIniciarAtencion, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addComponent(btnNuevoRegistro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(36, 36, 36))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnBusquedaCritica, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnLlamarPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnNuevoIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnReportesDia, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 410, 320));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, 770, 300));
 
-        lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/fondo_menuPrincipal.png"))); // NOI18N
-        getContentPane().add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 590, 510));
+        lblFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/fondo_nuevoMenu.png"))); // NOI18N
+        getContentPane().add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 830, 490));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnNuevoRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoRegistroActionPerformed
+    private void btnNuevoIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoIngresoActionPerformed
         // TODO add your handling code here:
         VentanaHospital formularioRegistro = new VentanaHospital(this, this.colaTriaje);
+        // Mostramos el formulario de registro
         formularioRegistro.setVisible(true);
+        // Ocultamos el menú principal temporalmente
         this.setVisible(false);
-    }//GEN-LAST:event_btnNuevoRegistroActionPerformed
+    }//GEN-LAST:event_btnNuevoIngresoActionPerformed
 
-    private void btnIniciarAtencionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarAtencionActionPerformed
+    private void btnLlamarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLlamarPacienteActionPerformed
         // TODO add your handling code here:
-        //VentanaAtencion pantallaEspera = new VentanaAtencion(this, this.colaTriaje, this.historialAtendidos);
-        //pantallaEspera.setVisible(true);
-        //this.setVisible(false);
-    }//GEN-LAST:event_btnIniciarAtencionActionPerformed
+        VentanaAtencion pantallaAtencion = new VentanaAtencion(this, this.colaTriaje, this.historialAtendidos);
+        pantallaAtencion.setVisible(true);
+        // Ocultamos el menú principal temporalmente
+        this.setVisible(false);
+    }//GEN-LAST:event_btnLlamarPacienteActionPerformed
+
+    private void btnBusquedaCriticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaCriticaActionPerformed
+        // TODO add your handling code here:
+        
+        VentanaBusqueda pantallaBusqueda = new VentanaBusqueda(this, this.colaTriaje, this.historialAtendidos);
+        pantallaBusqueda.setVisible(true);
+    
+        // Ocultamos el menú principal
+        this.setVisible(false);
+    }//GEN-LAST:event_btnBusquedaCriticaActionPerformed
+
+    private void btnReportesDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesDiaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReportesDiaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -124,8 +159,10 @@ public class VentanaMenuHospital extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnIniciarAtencion;
-    private javax.swing.JButton btnNuevoRegistro;
+    private javax.swing.JButton btnBusquedaCritica;
+    private javax.swing.JButton btnLlamarPaciente;
+    private javax.swing.JButton btnNuevoIngreso;
+    private javax.swing.JButton btnReportesDia;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblFondo;
     // End of variables declaration//GEN-END:variables
