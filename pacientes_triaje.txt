@@ -27,3 +27,7 @@
 1733333333,William Granda,3 - Urgencia Media
 1744444444,Silvana Betancourt,4 - Urgencia Menor
 1751358548,William Betancourt,5 - Consulta General
+1752781987,Paula Granda,5 - Consulta General
+1654367819,Juan Ortiz,1 - Paro Médico
+1752781987,matias monge,4 - Urgencia Menor
+1752781987,matias,2 - Urgencia Alta

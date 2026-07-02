@@ -5,11 +5,14 @@
 package modulo.vistas;
 
 import javax.swing.JOptionPane;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import modulo.estructuras.ColaPrioridadHospital;
 import modulo.modelo.Paciente;
 import modulo.servicios.GestorAlgoritmos;
 import modulo.servicios.ListaHistorialAtendidos;
-
 /**
  *
  * @author paula
@@ -31,6 +34,7 @@ public class VentanaBusqueda extends javax.swing.JFrame {
         this.menuPrincipal = menuShared;
         this.colaTriaje = colaShared;
         this.historialAtendidos = historialShared;
+        configurarValidaciones();
     }
 
     /**
@@ -121,6 +125,45 @@ public class VentanaBusqueda extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void configurarValidaciones() {
+
+        // txtBusquedaCedula: unicamente digitos numericos, maximo 10 caracteres
+        ((AbstractDocument) txtBusquedaCedula.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string == null) {
+                    return;
+                }
+                String textoFiltrado = string.replaceAll("[^0-9]", "");
+                int espacioDisponible = 10 - fb.getDocument().getLength();
+                if (espacioDisponible <= 0) {
+                    return;
+                }
+                if (textoFiltrado.length() > espacioDisponible) {
+                    textoFiltrado = textoFiltrado.substring(0, espacioDisponible);
+                }
+                super.insertString(fb, offset, textoFiltrado, attr);
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) {
+                    super.replace(fb, offset, length, text, attrs);
+                    return;
+                }
+                String textoFiltrado = text.replaceAll("[^0-9]", "");
+                int espacioDisponible = 10 - (fb.getDocument().getLength() - length);
+                if (espacioDisponible < 0) {
+                    espacioDisponible = 0;
+                }
+                if (textoFiltrado.length() > espacioDisponible) {
+                    textoFiltrado = textoFiltrado.substring(0, espacioDisponible);
+                }
+                super.replace(fb, offset, length, textoFiltrado, attrs);
+            }
+        });
+    }
+    
     private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
         // TODO add your handling code here:
         this.menuPrincipal.setVisible(true);
@@ -128,7 +171,7 @@ public class VentanaBusqueda extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVolverMenuActionPerformed
 
     private void btnBuscarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPacienteActionPerformed
-        // TODO add your handling code here:                                                                                                 
+       // TODO add your handling code here:                                                                                                 
     String cedulaBuscada = txtBusquedaCedula.getText().trim();
 
     // 1. Limpiamos los resultados anteriores por si acaso
@@ -138,6 +181,12 @@ public class VentanaBusqueda extends javax.swing.JFrame {
 
     if (cedulaBuscada.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Por favor, ingrese un número de cédula para buscar.", "Campo Vacío", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Validación: la cédula debe contener exactamente 10 dígitos numéricos
+    if (!cedulaBuscada.matches("[0-9]{10}")) {
+        JOptionPane.showMessageDialog(this, "La cédula debe contener exactamente 10 dígitos numéricos.", "Cédula Inválida", JOptionPane.WARNING_MESSAGE);
         return;
     }
 

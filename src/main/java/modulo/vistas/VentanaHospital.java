@@ -9,6 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.swing.JOptionPane;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import modulo.estructuras.ColaPrioridadHospital;
 import modulo.modelo.Paciente;
 
@@ -29,6 +33,7 @@ public class VentanaHospital extends javax.swing.JFrame {
         initComponents();
         this.menuPrincipal = menuShared;
         this.colaTriaje = colaShared;
+        configurarValidaciones();
     }
 
     /**
@@ -111,10 +116,72 @@ public class VentanaHospital extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+ private void configurarValidaciones() {
+
+        // txtCedula: unicamente digitos numericos, maximo 10 caracteres
+        ((AbstractDocument) txtCedula.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string == null) {
+                    return;
+                }
+                String textoFiltrado = string.replaceAll("[^0-9]", "");
+                int espacioDisponible = 10 - fb.getDocument().getLength();
+                if (espacioDisponible <= 0) {
+                    return;
+                }
+                if (textoFiltrado.length() > espacioDisponible) {
+                    textoFiltrado = textoFiltrado.substring(0, espacioDisponible);
+                }
+                super.insertString(fb, offset, textoFiltrado, attr);
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) {
+                    super.replace(fb, offset, length, text, attrs);
+                    return;
+                }
+                String textoFiltrado = text.replaceAll("[^0-9]", "");
+                int espacioDisponible = 10 - (fb.getDocument().getLength() - length);
+                if (espacioDisponible < 0) {
+                    espacioDisponible = 0;
+                }
+                if (textoFiltrado.length() > espacioDisponible) {
+                    textoFiltrado = textoFiltrado.substring(0, espacioDisponible);
+                }
+                super.replace(fb, offset, length, textoFiltrado, attrs);
+            }
+        });
+
+        // txtNombre: unicamente letras y espacios, no se permiten numeros ni simbolos
+        ((AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string == null) {
+                    return;
+                }
+                String textoFiltrado = string.replaceAll("[^a-zA-ZÁÉÍÓÚáéíóúÑñÜü ]", "");
+                super.insertString(fb, offset, textoFiltrado, attr);
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) {
+                    super.replace(fb, offset, length, text, attrs);
+                    return;
+                }
+                String textoFiltrado = text.replaceAll("[^a-zA-ZÁÉÍÓÚáéíóúÑñÜü ]", "");
+                super.replace(fb, offset, length, textoFiltrado, attrs);
+            }
+        });
+    }
+   
     private void cboPrioridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPrioridadActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cboPrioridadActionPerformed
-
+    
+    
     private void btnRegistrarTurnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarTurnoActionPerformed
         // TODO add your handling code here:
         String cedula = txtCedula.getText().trim();
@@ -125,6 +192,18 @@ public class VentanaHospital extends javax.swing.JFrame {
 
         if (cedula.isEmpty() || nombre.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, ingrese la identificación y el nombre completo.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validación: la cédula debe contener exactamente 10 dígitos numéricos
+        if (!cedula.matches("[0-9]{10}")) {
+            JOptionPane.showMessageDialog(this, "La cédula debe contener exactamente 10 dígitos numéricos.", "Cédula Inválida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validación: el nombre solo puede contener letras y espacios, no números
+        if (!nombre.matches("[a-zA-ZÁÉÍÓÚáéíóúÑñÜü ]+")) {
+            JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras, no se permiten números.", "Nombre Inválido", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -148,7 +227,7 @@ public class VentanaHospital extends javax.swing.JFrame {
             out.println(cedula + "," + nombre + "," + prioridadTexto);
             
             JOptionPane.showMessageDialog(this, 
-                    "Paciente ingresado con éxito.\n¡Tu estructura interna lo ordenó por prioridad!", 
+                    "Paciente ingresado con éxito", 
                     "Registro Exitoso", 
                     JOptionPane.INFORMATION_MESSAGE);
             
@@ -160,7 +239,6 @@ public class VentanaHospital extends javax.swing.JFrame {
         } catch (IOException e) {
             System.out.println("Error de persistencia: " + e.getMessage());
         }
-        
     }//GEN-LAST:event_btnRegistrarTurnoActionPerformed
 
     private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
@@ -168,16 +246,14 @@ public class VentanaHospital extends javax.swing.JFrame {
         this.menuPrincipal.setVisible(true); // Reaparece el menú original con los datos intactos
         this.dispose();
     }//GEN-LAST:event_btnVolverMenuActionPerformed
-
+    
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {

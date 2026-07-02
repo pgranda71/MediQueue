@@ -9,6 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.swing.JOptionPane;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 /**
  *
@@ -24,6 +28,7 @@ public class VentanaRegistro extends javax.swing.JFrame {
     public VentanaRegistro() {
         initComponents();
         this.setLocationRelativeTo(null);
+        configurarValidaciones();
     }
 
     /**
@@ -124,7 +129,30 @@ public class VentanaRegistro extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private void configurarValidaciones() {
+ 
+        // txtUsuario: unicamente letras y espacios, no se permiten numeros ni simbolos
+        ((AbstractDocument) txtNuevoUsuario.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string == null) {
+                    return;
+                }
+                String textoFiltrado = string.replaceAll("[^a-zA-ZÁÉÍÓÚáéíóúÑñÜü ]", "");
+                super.insertString(fb, offset, textoFiltrado, attr);
+            }
 
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) {
+                    super.replace(fb, offset, length, text, attrs);
+                    return;
+                }
+                String textoFiltrado = text.replaceAll("[^a-zA-ZÁÉÍÓÚáéíóúÑñÜü ]", "");
+                super.replace(fb, offset, length, textoFiltrado, attrs);
+            }
+        });
+    }
     private void btnVolverLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverLoginActionPerformed
         // TODO add your handling code here:
         VentanaLogin login = new VentanaLogin();
