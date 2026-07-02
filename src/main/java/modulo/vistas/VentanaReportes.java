@@ -4,19 +4,70 @@
  */
 package modulo.vistas;
 
+import javax.swing.table.DefaultTableModel;
+import modulo.estructuras.ColaPrioridadHospital;
+import modulo.modelo.Paciente;
+import modulo.servicios.GestorAlgoritmos;
+import modulo.servicios.ListaHistorialAtendidos;
+
 /**
  *
  * @author paula
  */
 public class VentanaReportes extends javax.swing.JFrame {
     
+    private VentanaMenuHospital menuPrincipal;
+    private ColaPrioridadHospital colaTriaje;
+    private ListaHistorialAtendidos historialAtendidos;
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaReportes.class.getName());
 
     /**
      * Creates new form VentanaReportes
      */
-    public VentanaReportes() {
+    public VentanaReportes(VentanaMenuHospital menuShared, ColaPrioridadHospital colaShared, ListaHistorialAtendidos historialShared) {
         initComponents();
+        this.menuPrincipal = menuShared;
+        this.colaTriaje = colaShared;
+        this.historialAtendidos = historialShared;
+        calcularMetricasDelDia();
+    }
+    
+    private void calcularMetricasDelDia() {
+        GestorAlgoritmos gestor = new GestorAlgoritmos();
+
+        // 1. Convertir estructuras dinámicas a arreglos para lectura segura
+        Paciente[] enEspera = colaTriaje.transformarAArreglo();
+        Paciente[] yaAtendidos = historialAtendidos.obtenerHistorialComoArreglo();
+
+        int totalEspera = enEspera.length;
+        int totalAtendidos = yaAtendidos.length;
+        int flujoTotalDelDia = totalEspera + totalAtendidos;
+
+        // 2. Uso de tu método recursivo avanzado para calcular casos críticos (Triaje Nivel 1 y 2)
+        // Recorremos el flujo puro de los nodos dinámicos sin destruir las listas
+        int criticosEnEspera = gestor.calcularEstadisticaTriajeRecursiva(colaTriaje.getFrente(), 2);
+        int criticosAtendidos = gestor.calcularEstadisticaTriajeRecursiva(historialAtendidos.getCabeza(), 2);
+        int totalCasosCriticos = criticosEnEspera + criticosAtendidos;
+
+        // 3. Inyección de métricas calculadas en tus JLabels
+        lblTotalPacientes.setText("Flujo Total del Día: " + flujoTotalDelDia + " pacientes registrados");
+        lblAtendidosContador.setText("Atendidos en Consulta: " + totalAtendidos);
+        lblEsperaContador.setText("Pendientes en Turno: " + totalEspera);
+        lblCriticosContador.setText("Alertas Críticas (Triaje 1-2): " + totalCasosCriticos + " casos severos");
+
+        // 4. Llenado automático del JTable con el histórico de pacientes atendidos
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaHistorialReporte.getModel();
+        modeloTabla.setRowCount(0); // Limpiamos datos de diseño o simulaciones previas
+
+        for (Paciente p : yaAtendidos) {
+            Object[] fila = {
+                p.getCedula(),
+                p.getNombre(),
+                "Nivel " + p.getNivelTriaje()
+            };
+            modeloTabla.addRow(fila);
+        }
     }
 
     /**
@@ -29,6 +80,13 @@ public class VentanaReportes extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaHistorialReporte = new javax.swing.JTable();
+        lblCriticosContador = new javax.swing.JLabel();
+        lblTotalPacientes = new javax.swing.JLabel();
+        lblAtendidosContador = new javax.swing.JLabel();
+        lblEsperaContador = new javax.swing.JLabel();
+        btnVolverMenu = new javax.swing.JButton();
         lblFondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -36,15 +94,79 @@ public class VentanaReportes extends javax.swing.JFrame {
 
         jPanel1.setOpaque(false);
 
+        tablaHistorialReporte.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Cédula", "Nombre Completo", "Nivel de triaje"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaHistorialReporte);
+
+        btnVolverMenu.setContentAreaFilled(false);
+        btnVolverMenu.addActionListener(this::btnVolverMenuActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 870, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(79, 79, 79)
+                .addComponent(lblCriticosContador, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(83, 83, 83)
+                    .addComponent(lblTotalPacientes, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(504, Short.MAX_VALUE)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(82, 82, 82)
+                    .addComponent(lblAtendidosContador, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(505, Short.MAX_VALUE)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(82, 82, 82)
+                    .addComponent(lblEsperaContador, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(505, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 410, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(69, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(64, 64, 64))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblCriticosContador, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnVolverMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(79, 79, 79)
+                    .addComponent(lblTotalPacientes, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(274, Short.MAX_VALUE)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(160, 160, 160)
+                    .addComponent(lblAtendidosContador, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(193, Short.MAX_VALUE)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap(241, Short.MAX_VALUE)
+                    .addComponent(lblEsperaContador, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(112, 112, 112)))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 870, 410));
@@ -55,33 +177,21 @@ public class VentanaReportes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new VentanaReportes().setVisible(true));
-    }
+    private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
+        // TODO add your handling code here:
+        this.menuPrincipal.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVolverMenuActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnVolverMenu;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblAtendidosContador;
+    private javax.swing.JLabel lblCriticosContador;
+    private javax.swing.JLabel lblEsperaContador;
     private javax.swing.JLabel lblFondo;
+    private javax.swing.JLabel lblTotalPacientes;
+    private javax.swing.JTable tablaHistorialReporte;
     // End of variables declaration//GEN-END:variables
 }

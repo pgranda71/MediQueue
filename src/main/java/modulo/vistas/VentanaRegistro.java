@@ -40,6 +40,8 @@ public class VentanaRegistro extends javax.swing.JFrame {
         btnGuardarMedico = new javax.swing.JButton();
         btnVolverLogin = new javax.swing.JButton();
         txtNuevoUsuario = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
 
@@ -59,15 +61,16 @@ public class VentanaRegistro extends javax.swing.JFrame {
 
         txtNuevoUsuario.setBorder(null);
 
+        jLabel2.setText("USUARIO");
+
+        jLabel3.setText("CONTRASEÑA");
+
         javax.swing.GroupLayout lblFondoLayout = new javax.swing.GroupLayout(lblFondo);
         lblFondo.setLayout(lblFondoLayout);
         lblFondoLayout.setHorizontalGroup(
             lblFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lblFondoLayout.createSequentialGroup()
                 .addGroup(lblFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lblFondoLayout.createSequentialGroup()
-                        .addGap(98, 98, 98)
-                        .addComponent(txtNuevoPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(lblFondoLayout.createSequentialGroup()
                         .addGap(138, 138, 138)
                         .addComponent(btnGuardarMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -76,19 +79,27 @@ public class VentanaRegistro extends javax.swing.JFrame {
                         .addComponent(btnVolverLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(lblFondoLayout.createSequentialGroup()
                         .addGap(109, 109, 109)
-                        .addComponent(txtNuevoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(lblFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNuevoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNuevoPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(125, Short.MAX_VALUE))
         );
         lblFondoLayout.setVerticalGroup(
             lblFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lblFondoLayout.createSequentialGroup()
-                .addGap(75, 75, 75)
-                .addComponent(txtNuevoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(txtNuevoPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
+                .addGap(47, 47, 47)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(txtNuevoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNuevoPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(66, 66, 66)
                 .addComponent(btnGuardarMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
                 .addComponent(btnVolverLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -189,6 +200,8 @@ public class VentanaRegistro extends javax.swing.JFrame {
     private javax.swing.JButton btnGuardarMedico;
     private javax.swing.JButton btnVolverLogin;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel lblFondo;
     private javax.swing.JPasswordField txtNuevoPassword;

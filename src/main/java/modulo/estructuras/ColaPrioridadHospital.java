@@ -70,4 +70,9 @@ public class ColaPrioridadHospital {
         }
         return arreglo; 
     }
+    
+    public NodoPaciente getFrente() {
+    return this.frente; 
+ 
+}
 }

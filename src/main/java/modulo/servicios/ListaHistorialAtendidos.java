@@ -35,4 +35,8 @@ public class ListaHistorialAtendidos {
     public int obtenerTotal() {
         return totalAtendidos;
     }
+    
+    public NodoPaciente getCabeza() {
+    return this.cabeza;
+    }
 }

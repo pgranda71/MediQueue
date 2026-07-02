@@ -131,6 +131,11 @@ public class VentanaMenuHospital extends javax.swing.JFrame {
 
     private void btnReportesDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesDiaActionPerformed
         // TODO add your handling code here:
+        
+        VentanaReportes pantallaReportes = new VentanaReportes(this, this.colaTriaje, this.historialAtendidos);
+        pantallaReportes.setVisible(true);
+        //ocultamos el menú principal para que no se superpongan
+        this.setVisible(false);
     }//GEN-LAST:event_btnReportesDiaActionPerformed
 
     /**

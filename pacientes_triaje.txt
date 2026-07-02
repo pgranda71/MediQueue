@@ -14,3 +14,16 @@
 1751661446,Paula Camila Granda Betancourt,2 - Urgencia Alta
 1751661446,Paula Granda,1 - Paro Médico
 1751661446,Paula Granda,1 - Paro Médico
+1729387611,Andrea Cumbal,1 - Paro Médico
+1751307727,Karla Guaña,2 - Urgencia Alta
+1751661335,Paula Betancourt,1 - Paro Médico
+1711111111,Gabriel Granda,2 - Urgencia Alta
+1722222222,Melany Granda,4 - Urgencia Menor
+1733333333,Silvana Betancourt,2 - Urgencia Alta
+1744444444,William Granda,5 - Consulta General
+1751661446,Paula Granda,5 - Consulta General
+1711111111,Gabriel Granda,1 - Paro Médico
+1722222222,Melany Granda,5 - Consulta General
+1733333333,William Granda,3 - Urgencia Media
+1744444444,Silvana Betancourt,4 - Urgencia Menor
+1751358548,William Betancourt,5 - Consulta General
